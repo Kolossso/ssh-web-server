@@ -13,10 +13,16 @@ PRIVATE_KEY = os.getenv("SSH_PRIVATE_KEY")  # Берем ключ из пере�
 
 @app.route("/ssh", methods=["POST"])
 def ssh_command():
+    if not request.is_json:
+        return jsonify({"error": "Invalid JSON"}), 400
+    
     command = request.json.get("command")
     if not command:
         return jsonify({"error": "No command provided"}), 400
-    
+
+    if not PRIVATE_KEY:
+        return jsonify({"error": "SSH_PRIVATE_KEY is not set"}), 500
+
     try:
         # Читаем ключ из строки
         key_file = io.StringIO(PRIVATE_KEY)
@@ -34,8 +40,13 @@ def ssh_command():
         ssh.close()
         
         return jsonify({"output": output, "error": error})
+    
+    except paramiko.ssh_exception.AuthenticationException:
+        return jsonify({"error": "SSH authentication failed"}), 403
+    except paramiko.ssh_exception.SSHException as e:
+        return jsonify({"error": f"SSH error: {str(e)}"}), 500
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
