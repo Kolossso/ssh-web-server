@@ -1,7 +1,7 @@
 import os
 import paramiko
 import asyncio
-from aiogram import Bot, Dispatcher, types, F
+from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, Message
 
@@ -45,7 +45,7 @@ async def start_command(message: Message):
     await message.answer("Привет! Нажми кнопку для запуска сервера CS2:", reply_markup=keyboard)
 
 # Обработчик кнопки запуска сервера
-@dp.message(F.text == "🚀 Запустить сервер CS2")
+@dp.message(lambda message: message.text == "🚀 Запустить сервер CS2")
 async def run_server(message: Message):
     await message.answer("Запускаю сервер CS2... 🕹")
     result = await run_ssh_command(f"bash {START_SCRIPT_PATH}")

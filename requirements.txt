@@ -1,4 +1,4 @@
 flask
 paramiko
 gunicorn
-aiogram==2.25.1
+aiogram>=3.0
