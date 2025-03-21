@@ -16,7 +16,7 @@ START_SCRIPT_PATH = "/home/zokirjonovjavohir61/.steam/steam/steamapps/common/Cou
 
 # Создаем бота и диспетчер
 bot = Bot(token=API_TOKEN)
-dp = Dispatcher()
+dp = Dispatcher(bot=bot)
 
 # Клавиатура с кнопками
 keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
